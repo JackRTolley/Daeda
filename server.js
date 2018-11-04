@@ -24,6 +24,7 @@ var players = {};
 var player_count = 0;
 io.on('connection', function(socket) {
   socket.on('new player', function() {
+    
     players[socket.id] = {
       socket_id: socket.id,
       id: player_count,
