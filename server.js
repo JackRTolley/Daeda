@@ -27,8 +27,8 @@ io.on('connection', function(socket) {
     players[socket.id] = {
       socket_id: socket.id,
       id: player_count,
-      x: 300,
-      y: 300,
+      x: 450,
+      y: 450,
       spin: 0,
       speed: 0,
       spin_speed: 0,
@@ -67,6 +67,10 @@ io.on('connection', function(socket) {
     victim.force_x = force * Math.sin(angle);
     victim.force_y = force * Math.cos(angle);
     unicorn.speed = 0;
+  })
+  socket.on('kill', function(id){
+    console.log("Player died: " + id);
+    delete players[id];
   })
 });
 setInterval(function() {

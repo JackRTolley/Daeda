@@ -65,6 +65,24 @@ export class Player{
         socket.emit("collision", {'unicorn': this.socket_id,'victim': id});
     }
 
+    kill(context){
+        if(this.x < 0 || this.x > 950
+            || this.y < 0 || this.y > 950){
+                var socket = io();
+                socket.emit("kill", this.socket_id);
+
+                context.fillStyle = 'black';
+                context.fillRect(0,0,4000,4000);
+                context.fillStyle = 'red';
+                context.font = "100px Comic Sans MS";
+                context.fillText("You Died.", 250, 450);
+                
+                return true;
+            }
+        return false;
+        
+    }
+
 }
 
 function rainbow(numOfSteps, step) {

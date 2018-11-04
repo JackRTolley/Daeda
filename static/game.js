@@ -1,6 +1,7 @@
 import {Player} from './Player.js'
 
 var socket = io();
+var socket_id = null;
 var movement = {
     up: false,
     left: false,
@@ -35,23 +36,22 @@ var movement = {
 
 //Send notification that player has connected
 socket.emit('new player');
+socket.on('connect', function(){
+  socket_id = socket.id;
+})
 //Send movement data
 setInterval(function() {
   socket.emit('movement', movement);
 }, 1000 / 30);
 //Update Canvas
 var canvas = document.getElementById('canvas');
-canvas.width = 800;
-canvas.height = 600;
+canvas.width = 900;
+canvas.height = 900;
 var context = canvas.getContext('2d');
 var client_players = {};
-var canvas = document.getElementById('canvas');
-canvas.height = 800;
-canvas.width = 600;
-var context = canvas.getContext("2d")
 socket.on('state', function(players) {
 
-  context.clearRect(0, 0, 800, 600);
+  context.clearRect(0, 0, 900, 900);
   for (var id in players) {
     if(!(id in client_players)){   
       client_players[id] = new Player(players[id]);
@@ -71,6 +71,11 @@ socket.on('state', function(players) {
     }
     client_players[id].draw(canvas, context);
     client_players[id].detect_collisions(client_players);
+    if(client_players[id].kill(context) && id == socket_id){
+      delete client_players[id];
+
+      socket.disconnect();
+    };
   }
 });
 
